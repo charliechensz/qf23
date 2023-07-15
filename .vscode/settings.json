@@ -1,0 +1,14 @@
+{
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./B01",
+        "-p",
+        "*test.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "notebook.output.textLineLimit": 3000,
+    "jupyter.jupyterLaunchTimeout": 6000,
+    "aicursor.openaiApiKey": "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"
+}
