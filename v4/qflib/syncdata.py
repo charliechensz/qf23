@@ -1,7 +1,7 @@
 import datetime
 import time
 import pymysql
-from sqlalchemy import create_engine 
+from sqlalchemy import create_engine
 import pandas as pd
 
 import tushare as ts
@@ -11,13 +11,13 @@ pro = ts.pro_api()
 from qflib import basic
 
 # 获得 bak_basic
-def sync_basic(engine, df, table, trade_date):
+def sync_basic(conn, df, table, trade_date):
     
     sql = " delete from " + table + " where true "
-    print( table, basic.exec_sql(engine, sql) )
-    basic.write_data(engine, df, table, False, 'append')
+    print( table, basic.exec_sql(conn, sql) )
+    basic.write_data(conn, df, table, False, 'append')
 
-def sync_moneyflow(engine, period=1):
+def sync_moneyflow(conn, period=1):
     now = datetime.datetime.now()
     # period = 825
     for n in range(-period+1, 1):
@@ -28,7 +28,7 @@ def sync_moneyflow(engine, period=1):
 
         # 判断当日数据是否已存在
         sql="SELECT * FROM moneyflow where trade_date='" + trade_date+ "' LIMIT 10"
-        df=basic.read_data(engine, sql)
+        df=basic.read_data(conn, sql)
         if len(df) > 0:
             print( '  - existed' )   
         else:    
@@ -41,15 +41,15 @@ def sync_moneyflow(engine, period=1):
                 # 删除可能的已有数据
                 # sql = "delete from moneyflow where trade_date="+trade_date
                 # print( 'trade_date :', trade_date )
-                # print( 'delete res: ', basic.exec_sql(engine, sql) )
+                # print( 'delete res: ', basic.exec_sql(conn, sql) )
                 # 添加数据
-                basic.write_data(engine, df, 'moneyflow', False,'append') 
+                basic.write_data(conn, df, 'moneyflow', False,'append') 
                 print( '  - added' )
 
     print('\n== moneyflow daily: OK\n')
 
 # 获得股票日交易数据 - OK
-def sync_tran_daily(engine, period=1):    
+def sync_tran_daily(conn, period=1):    
     now = datetime.datetime.now()
     # period = 1501
     for n in range(-period+1, 1):
@@ -59,24 +59,28 @@ def sync_tran_daily(engine, period=1):
         print( trade_date, end="" )  
 
         # existDate = False
-        sql="SELECT * FROM tran_daily where trade_date='" + trade_date+ "' LIMIT 10"
-        df=basic.read_data(engine, sql)
+        sql="SELECT * FROM tran_daily where trade_date='" + trade_date+ "' LIMIT 1"
+        df=basic.read_data(conn, sql)
         if len(df) > 0:
             print( '  - existed' )
         else:
             # read data
             df = pro.daily(trade_date=trade_date)
+            df.rename( columns={'vol':'volume','pct_chg':'pct_change', 'amount':'value'}, inplace=True )
             print( '  - read: ', df.shape, end="")
-            if len(df) > 0:
+            if len(df) > 0:  
                 # print( '  - none ')
                 # 删除已有数据
                 # sql = "delete from tran_daily where trade_date="+trade_date
                 # print( 'trade_date :', trade_date )
                 # print( 'sql: ', sql )
-                # print( 'delete res: ', basic.exec_sql(engine, sql) )
+                # print( 'delete res: ', basic.exec_sql(conn, sql) )
                 # 添加数据
-                basic.write_data(engine, df, 'tran_daily', False,'append')
-                print( '  - Added')
+                write_no = basic.write_data(conn, df, 'tran_daily', False,'append') 
+                if write_no > 0:
+                    print( '  - Added', str(write_no))
+                else:
+                    print( '  - Added 0')
             else:    
                 print( '  - none ' )
     print('\n== tran_daily: OK\n')
