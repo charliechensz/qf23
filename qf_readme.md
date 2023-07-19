@@ -56,14 +56,8 @@
     st_low: 实体低点
     xing: int, 是否十字星，st振幅 < 1%
 
-    #ma - OK
-    ma5, close的5日移动平均线 
-    ma10, ma20, ma30, ma60, ma120, ma250
-
-    # ma3_pct_change；  3天平均涨幅
-    # max3_pct_change； 3天中的最大涨幅
-    # max3_high：        3天内最高股价
-    # dema, DEMA指标值 
+    # ma close的x日移动平均线 - OK
+    ma5, ma10, ma20, ma30, ma60, ma120, ma250
     
     # macd - OK
     - diff, macd-m, macd = 12 天 EMA - 26 天 EMA
@@ -73,36 +67,46 @@
 
     # jx系列：均线; xl斜率， zs站上 - ing
     - jx_days_ud60: 60线以下时开始计算天数，累计。上60后清零；== OK
-    
-    - jx_xl_60 : 60天线斜率 
-    - jx_xl_5， 10， 20， 60， 120， 250
+    # 均线斜率
+    - jx_xl_ 5，10， 20， 60， 120， 250
+    # 站上5线 - OK
+    - jx_zs_5 : 10, 20, 60, 120, 250
 
-    - jx_zs_5: 站上5线
-    - jx_zs_ : 10, 20, 60, 120, 250
+    # lj系列：量价关系
+    # vol_ma volume的x日移动平均线 - OK
+    - vol_ma3, 5, 10, 20, 60
+    # fl放量: lj_fl_  - OK
+    - 1_3: 超短，今天放量 
+    - 3_10, 超短：3天放量
+    - 5_20, 5_60 短线：5天放量
+    - 20_60, 中线：20天放量
 
-    - jx_sc_5_10:
-    - jx_sc_ ： 10_20， 20_60
-
-    # lj系列：量价关系， fl放量
-    lj_fl_3_5
-    lj_fl_ : 5_10, 5_20, 5_60 
+    """ test列，验证数据 """
+    # sz 上涨系列：
+    # 后n天上涨率, 后n天的pct_change累加
+    - sz_sum_5, 10, 20  
 
 
+    """ 待定 """
     # rsi, RSI指标 
-    # bb-u, 布林带线上轨 
-    # bb-m, 布林带线中轨
-    # bb-l, 布林带线下轨
+    # dema, DEMA指标值
+    # boll指标 
+    - bb-u, 布林带线上轨 
+    - bb-m, 布林带线中轨
+    - bb-l, 布林带线下轨
 
-
-
-
+    # ma3_pct_change；  3天平均涨幅
+    # max3_pct_change； 3天中的最大涨幅
+    # max3_high：        3天内最高股价
+    # 上穿 - (待定)
+    - jx_sc_ ： 10_20， 20_60, 60_120, 120_250
 
     ''' 可能mpf 需要字段 '''
-    upper_lim, 涨停价格 
-    lower_lim, 跌停价格 
-    last_close, 昨日收盘价 
-    average, 平均价 
-    volrate, 交易量（手） 
+    - upper_lim, 涨停价格 
+    - lower_lim, 跌停价格 
+    - last_close, 昨日收盘价 
+    - average, 平均价 
+    - volrate, 交易量（手） 
     ''' end '''
 
 
