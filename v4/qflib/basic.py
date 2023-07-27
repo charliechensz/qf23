@@ -1,6 +1,7 @@
 import pymysql
 from sqlalchemy import create_engine 
 import pandas as pd
+import math
 
 from random import randint
 from qflib import basic
@@ -32,3 +33,5 @@ def write_data(conn, df, table, status=False, mode='append'):
     write_no = df.to_sql(table, conn, index=status, if_exists=mode, chunksize=2000) # 每次写入2000个
     return write_no
 
+def angle2degree(angle):
+    return math.atan(angle)*180/math.pi
