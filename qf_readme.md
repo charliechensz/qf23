@@ -47,6 +47,7 @@
 
 ### day_zhibiao 日指标
 
+  ## K线形态 
     # basic - OK
     pct_upper:  上引线%
     pct_down:  下引线%
@@ -55,23 +56,25 @@
     st_high: 实体高点
     st_low: 实体低点
     xing: int, 是否十字星，st振幅 < 1%
+  # K线组合
+    k_red : 红三兵
 
-    # ma close的x日移动平均线 - OK
+  # ma close的x日移动平均线 - OK
     ma5, ma10, ma20, ma30, ma60, ma120, ma250
     
-    # macd - OK
+  # macd - OK
     - diff, macd-m, macd = 12 天 EMA - 26 天 EMA
     - dea,  macd-s, signal = 9 天 MACD的EMA
     - bar,  macd-h, hist = MACD - MACD signal
     # histogram, MACD-Signal, Color Tick; 计算macd与signal的差值
 
-    # jx系列：均线; xl斜率， zs站上 - ing
+  # jx系列：均线; xl斜率， zs站上 - ing
     - jx_days_ud60: 60线以下时开始计算天数，累计。上60后清零；== OK
-    # 均线斜率
+   # 均线斜率
     - jx_xl_ 5，10， 20， 60， 120， 250
-    # 均线斜率度数 .apply(np.arctan).apply(np.degrees)
+   # 均线斜率角度 .apply(np.arctan).apply(np.degrees)
     - jx_dg_ 5，10， 20， 60， 120， 250
-    # 站上5线 - OK
+   # 站上5线 - OK
     - jx_zs_5 : 10, 20, 60, 120, 250
 
     """ lj系列：量价关系 """
